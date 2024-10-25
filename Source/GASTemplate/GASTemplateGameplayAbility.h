@@ -13,5 +13,10 @@ UCLASS()
 class GASTEMPLATE_API UGASTemplateGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="UI")
+	TSubclassOf<UUserWidget> AbilityWidget;
 	
 };

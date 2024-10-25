@@ -24,6 +24,8 @@ class GASTEMPLATE_API UGASTemplateAttributeSet : public UAttributeSet
 
 public:
 
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Health", ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UGASTemplateAttributeSet, Health)

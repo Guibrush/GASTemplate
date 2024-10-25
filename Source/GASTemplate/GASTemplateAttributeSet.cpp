@@ -2,7 +2,43 @@
 
 
 #include "GASTemplateAttributeSet.h"
+#include "GASTemplateCharacter.h"
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
+
+void UGASTemplateAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	
+	// Get the Target actor, which should be our owner
+	AActor* TargetActor = nullptr;
+	// AController* TargetController = nullptr;
+	AGASTemplateCharacter* TargetCharacter = nullptr;
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		// TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		TargetCharacter = Cast<AGASTemplateCharacter>(TargetActor);
+	}
+
+	if (!TargetCharacter)
+		return;
+	
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		if (Data.EvaluatedData.Attribute.GetNumericValue(this) <= 0.f && TargetCharacter->GetIsAlive())
+		{
+			TargetCharacter->Die();
+		}
+
+		SetHealth(FMath::Clamp(Data.EvaluatedData.Attribute.GetNumericValue(this), 0.0f, GetMaxHealth()));
+	}
+
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(Data.EvaluatedData.Attribute.GetNumericValue(this), 0.0f, GetMaxMana()));
+	}
+}
 
 void UGASTemplateAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

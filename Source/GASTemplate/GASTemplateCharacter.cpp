@@ -124,3 +124,17 @@ void AGASTemplateCharacter::ActivateAbility(const FInputActionValue& Value, cons
 {
 	BPActivateAbility(AbilityTag);
 }
+
+bool AGASTemplateCharacter::GetIsAlive() const
+{
+	return IsAlive;
+}
+
+void AGASTemplateCharacter::Die()
+{
+	if (IsAlive)
+	{
+		IsAlive = false;
+		BPDie();
+	}
+}

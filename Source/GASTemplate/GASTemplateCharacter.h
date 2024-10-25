@@ -53,6 +53,17 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void BPActivateAbility(FGameplayTag AbilityTag);
 
+	/** Returns if this character is alive or not based on its health */
+	UFUNCTION(BlueprintPure)
+	bool GetIsAlive() const;
+
+	/** Internal function to start the dying process of this character */
+	void Die();
+
+	/** Blueprint function to pass the dying process to blueprint logic */
+	UFUNCTION(BlueprintImplementableEvent)
+	void BPDie();
+
 protected:
 
 	/** Called for movement input */
@@ -63,14 +74,15 @@ protected:
 
 	/** Called for ability input */
 	void ActivateAbility(const FInputActionValue& Value, const ETriggerEvent TriggerEvent, const bool bEnable, FGameplayTag AbilityTag);
-			
-
-protected:
+	
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// To add mapping context
 	virtual void BeginPlay();
+
+	/** Indicates if this character is dead or not */
+	bool IsAlive = true;
 
 public:
 	/** Returns CameraBoom subobject **/
